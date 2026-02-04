@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 import { auth } from './auth.js';
 
 const app = new Hono();
+const BASE_URL = process.env.BETTER_AUTH_BASE_URL || 'http://localhost:3000';
 
 // Enable CORS for frontend
 app.use('/*', cors({
@@ -26,7 +27,7 @@ app.post('/api/signup', async (c) => {
   const body = await c.req.json();
   
   // Create a new request to Better Auth's sign-up endpoint
-  const authRequest = new Request('http://localhost:3000/api/auth/sign-up/email', {
+  const authRequest = new Request(`${BASE_URL}/api/auth/sign-up/email`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -47,7 +48,7 @@ app.post('/api/login', async (c) => {
   const body = await c.req.json();
   
   // Create a new request to Better Auth's sign-in endpoint
-  const authRequest = new Request('http://localhost:3000/api/auth/sign-in/email', {
+  const authRequest = new Request(`${BASE_URL}/api/auth/sign-in/email`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
