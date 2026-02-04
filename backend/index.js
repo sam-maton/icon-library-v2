@@ -11,91 +11,56 @@ app.use('/*', cors({
   credentials: true,
 }));
 
-// Mount Better Auth routes
+// Mount Better Auth routes at /api/auth
+// This provides all the authentication endpoints:
+// - POST /api/auth/sign-up/email - for signup
+// - POST /api/auth/sign-in/email - for login
+// - POST /api/auth/sign-out - for logout
+// - GET /api/auth/session - to get current session
 app.on(['GET', 'POST'], '/api/auth/*', (c) => {
   return auth.handler(c.req.raw);
 });
 
-// Signup endpoint (using Better Auth)
+// Backward compatibility - redirect old endpoints to Better Auth endpoints
 app.post('/api/signup', async (c) => {
-  try {
-    const body = await c.req.json();
-    
-    // Use Better Auth to sign up the user
-    const response = await fetch('http://localhost:3000/api/auth/sign-up/email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: body.email,
-        password: body.password,
-        name: body.name || body.email.split('@')[0],
-      }),
-    });
+  const body = await c.req.json();
+  
+  // Create a new request to Better Auth's sign-up endpoint
+  const authRequest = new Request('http://localhost:3000/api/auth/sign-up/email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: body.email,
+      password: body.password,
+      name: body.name || body.email.split('@')[0],
+    }),
+  });
 
-    const data = await response.json();
-    
-    if (!response.ok) {
-      return c.json({ 
-        success: false, 
-        message: data.error || 'Signup failed' 
-      }, response.status);
-    }
-
-    return c.json({ 
-      success: true, 
-      message: 'User created successfully',
-      user: data.user,
-    });
-  } catch (error) {
-    console.error('Signup error:', error);
-    return c.json({ 
-      success: false, 
-      message: 'An error occurred during signup' 
-    }, 500);
-  }
+  // Call Better Auth handler
+  const response = await auth.handler(authRequest);
+  return response;
 });
 
-// Login endpoint (using Better Auth)
 app.post('/api/login', async (c) => {
-  try {
-    const body = await c.req.json();
-    
-    // Use Better Auth to sign in the user
-    const response = await fetch('http://localhost:3000/api/auth/sign-in/email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: body.email,
-        password: body.password,
-      }),
-    });
+  const body = await c.req.json();
+  
+  // Create a new request to Better Auth's sign-in endpoint
+  const authRequest = new Request('http://localhost:3000/api/auth/sign-in/email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: body.email,
+      password: body.password,
+    }),
+  });
 
-    const data = await response.json();
-    
-    if (!response.ok) {
-      return c.json({ 
-        success: false, 
-        message: data.error || 'Login failed' 
-      }, response.status);
-    }
-
-    return c.json({ 
-      success: true, 
-      message: 'Login successful',
-      user: data.user,
-      session: data.session,
-    });
-  } catch (error) {
-    console.error('Login error:', error);
-    return c.json({ 
-      success: false, 
-      message: 'An error occurred during login' 
-    }, 500);
-  }
+  // Call Better Auth handler
+  const response = await auth.handler(authRequest);
+  return response;
 });
 
 // Health check endpoint
