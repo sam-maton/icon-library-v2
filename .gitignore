@@ -6,6 +6,7 @@ backend/node_modules/
 # Build outputs
 frontend/dist/
 frontend/.angular/
+backend/dist/
 
 # Database
 backend/db/app.db
