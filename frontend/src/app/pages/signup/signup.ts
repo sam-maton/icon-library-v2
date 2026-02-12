@@ -1,5 +1,12 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,45 +24,49 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
 })
 export class Signup {
   signupForm: FormGroup;
+  private readonly fb = inject(FormBuilder);
+  private readonly http = inject(HttpClient);
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
-    this.signupForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+  constructor() {
+    this.signupForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator },
+    );
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-    
+
     if (!password || !confirmPassword) {
       return null;
     }
-    
+
     return password.value === confirmPassword.value ? null : { passwordMismatch: true };
   }
 
   onSubmit() {
     if (this.signupForm.valid) {
       const formData = this.signupForm.value;
-      this.http.post('http://localhost:3000/api/signup', formData)
-        .subscribe({
-          next: (response) => {
-            console.log('Signup successful:', response);
-          },
-          error: (error) => {
-            console.error('Signup error:', error);
-          }
-        });
+      this.http.post('http://localhost:3000/api/signup', formData).subscribe({
+        next: (response) => {
+          console.log('Signup successful:', response);
+        },
+        error: (error) => {
+          console.error('Signup error:', error);
+        },
+      });
     }
   }
 }

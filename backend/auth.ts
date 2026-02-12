@@ -16,7 +16,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  baseURL: process.env.BETTER_AUTH_BASE_URL || 'http://localhost:3000',
+  baseURL: process.env.BETTER_AUTH_BASE_URL || 'http://localhost:4200',
   // For development, we'll use a simple secret key
   // In production, this should be an environment variable
   secret: process.env.BETTER_AUTH_SECRET || 'dev-secret-key-change-in-production',
