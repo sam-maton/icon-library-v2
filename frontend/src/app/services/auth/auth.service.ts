@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { authClient } from '../../lib/auth-client';
 
 @Injectable({
@@ -12,6 +12,10 @@ export class AuthService {
 
   signIn(email: string, password: string): Observable<unknown> {
     return from(authClient.signIn.email({ email, password })).pipe(
+      map((res) => {
+        if (res.error) throw res.error;
+        return res;
+      }),
       tap(() => this.refreshSession()),
     );
   }
