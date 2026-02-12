@@ -39,6 +39,16 @@
         font-weight: 500;
       }
 
+      .error-banner {
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: #ffe7e7;
+        color: #7a0b0b;
+        border: 1px solid #f5bcbc;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
       .link-container {
         text-align: center;
         margin-top: 16px;

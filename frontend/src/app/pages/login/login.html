@@ -7,7 +7,7 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="email@example.com">
+          <input matInput type="email" formControlName="email" placeholder="email@example.com" />
           @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
             <mat-error>Email is required</mat-error>
           }
@@ -18,14 +18,24 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" placeholder="Password">
-          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+          <input matInput type="password" formControlName="password" placeholder="Password" />
+          @if (
+            loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched
+          ) {
             <mat-error>Password is required</mat-error>
           }
         </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Login</button>
-        
+        @if (errorMessage()) {
+          <div class="error-banner" role="alert">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">
+          Login
+        </button>
+
         <div class="link-container">
           <p>Don't have an account? <a routerLink="/signup">Sign up here</a></p>
         </div>

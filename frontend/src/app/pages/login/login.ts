@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +25,7 @@ import { AuthService } from '../../services/auth/auth.service';
 export class Login {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  errorMessage = signal<string | null>(null);
 
   loginForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -36,10 +37,19 @@ export class Login {
       const formData = this.loginForm.value;
       this.authService.signIn(formData.email!, formData.password!).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
+          if (response.error) {
+            console.log(response.error);
+            if (response.error.message) {
+              this.errorMessage.set(response.error.message);
+            } else {
+              this.errorMessage.set('An unknown error occurred during login.');
+            }
+            return;
+          }
+          console.log('Login successful:', response.data?.user.email);
         },
         error: (error) => {
-          console.error('Login error:', error);
+          console.error('Unexpected error:', error);
         },
       });
     }
