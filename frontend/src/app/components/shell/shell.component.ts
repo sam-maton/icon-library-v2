@@ -16,7 +16,9 @@ export class ShellComponent {
 
   onLogout(): void {
     this.authService.signOut().subscribe({
-      next: () => this.router.navigateByUrl('/login'),
+      next: () => {
+        this.router.navigateByUrl('/login');
+      },
       error: (error) => console.error('Logout failed:', error),
     });
   }

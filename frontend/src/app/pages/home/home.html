@@ -1,1 +1,164 @@
-<p>home works!</p>
+<div class="home">
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand" aria-label="Icon Library">
+        <div class="brand-mark">IL</div>
+        <div class="brand-text">
+          <span class="brand-title">Icon Library</span>
+          <span class="brand-subtitle">Organize. Version. Share.</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button mat-button routerLink="/login">Log in</button>
+        <button mat-flat-button color="primary" routerLink="/signup">Sign up</button>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <mat-card class="hero-card">
+        <mat-card-content>
+          <p class="eyebrow">Your icon pipeline, finally versioned</p>
+          <h1>Build libraries people can trust and download.</h1>
+          <p class="lead">
+            Icon Library lets teams manage icons, bundle them into curated libraries, and ship
+            versioned updates with clear changelogs for every icon.
+          </p>
+          <div class="hero-actions">
+            <button mat-flat-button color="primary" routerLink="/signup">
+              Create your workspace
+            </button>
+            <button mat-stroked-button routerLink="/login">I already have an account</button>
+          </div>
+          <div class="hero-chips">
+            <mat-chip>Versioned icons</mat-chip>
+            <mat-chip>Library bundles</mat-chip>
+            <mat-chip>Instant downloads</mat-chip>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="hero-visual" aria-hidden="true">
+        <mat-card-content>
+          <div class="visual-panel">
+            <div class="panel-header">
+              <span>Icon Library</span>
+              <mat-icon fontSet="material-symbols-outlined">auto_fix_high</mat-icon>
+            </div>
+            <div class="panel-body">
+              <div class="icon-grid">
+                <div class="icon-chip" *ngFor="let icon of [1, 2, 3, 4, 5, 6, 7, 8, 9]">
+                  <mat-icon fontSet="material-symbols-outlined">interests</mat-icon>
+                  <span>v{{ icon }}.0</span>
+                </div>
+              </div>
+              <div class="panel-footer">
+                <div class="status">
+                  <span class="status-dot"></span>
+                  <span>Changelog ready</span>
+                </div>
+                <button mat-stroked-button disabled>Download bundle</button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </header>
+
+  <section class="feature-section">
+    <div class="section-header">
+      <h2>Everything your icon pipeline needs</h2>
+      <p>From a single glyph to a full system, keep every icon discoverable and up to date.</p>
+    </div>
+    <div class="feature-grid">
+      <mat-card>
+        <mat-card-content>
+          <mat-icon class="feature-icon" fontSet="material-symbols-outlined">inventory_2</mat-icon>
+          <h3>Library bundles</h3>
+          <p>Create libraries for teams, products, or themes and export them in one click.</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <mat-icon class="feature-icon" fontSet="material-symbols-outlined">history</mat-icon>
+          <h3>Changelog per icon</h3>
+          <p>Every update is tracked with notes, so users understand what changed and when.</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <mat-icon class="feature-icon" fontSet="material-symbols-outlined">shield</mat-icon>
+          <h3>Version control</h3>
+          <p>Ship stable releases, preview drafts, and roll back with confidence.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <section class="workflow-section">
+    <mat-card class="workflow-card">
+      <mat-card-content>
+        <div class="workflow-text">
+          <h2>Versioning that feels effortless.</h2>
+          <p>
+            Each icon keeps a timeline of changes. Users can review the changelog, compare versions,
+            and download the exact bundle they need.
+          </p>
+          <button mat-flat-button color="primary" routerLink="/signup">
+            Start versioning today
+          </button>
+        </div>
+        <div class="workflow-steps" aria-hidden="true">
+          <div class="step">
+            <span class="step-index">01</span>
+            <div>
+              <h4>Upload</h4>
+              <p>Add icons and metadata in seconds.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-index">02</span>
+            <div>
+              <h4>Bundle</h4>
+              <p>Group icons into shareable libraries.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-index">03</span>
+            <div>
+              <h4>Release</h4>
+              <p>Publish versions with changelog notes.</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <section class="cta-section">
+    <mat-card class="cta-card">
+      <mat-card-content>
+        <div>
+          <h2>Ready to ship a better icon experience?</h2>
+          <p>
+            Invite your team, publish your first library, and give users a clearer upgrade path.
+          </p>
+        </div>
+        <div class="cta-actions">
+          <button mat-flat-button color="primary" routerLink="/signup">Get started</button>
+          <button mat-button routerLink="/login">Log in</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <footer class="footer">
+    <span>Icon Library © 2026</span>
+    <div class="footer-links">
+      <button mat-button routerLink="/login">Log in</button>
+      <button mat-button routerLink="/signup">Sign up</button>
+    </div>
+  </footer>
+</div>
