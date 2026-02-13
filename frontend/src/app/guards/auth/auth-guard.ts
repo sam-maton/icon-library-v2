@@ -2,7 +2,7 @@ import { CanActivateFn, RedirectCommand, Router } from '@angular/router';
 import { authClient } from '../../lib/auth-client';
 import { inject } from '@angular/core';
 
-export const authGuardGuard: CanActivateFn = async (route, state) => {
+export const authGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
   const { data, error } = await authClient.getSession();
   if (error || !data?.session) {
