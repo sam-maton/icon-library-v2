@@ -1,0 +1,26 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f6f7fb;
+}
+
+.shell__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.shell__title {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.shell__spacer {
+  flex: 1 1 auto;
+}
+
+.shell__main {
+  flex: 1 1 auto;
+  padding: 24px;
+}
