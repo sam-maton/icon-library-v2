@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
@@ -25,6 +25,7 @@ import { AuthService } from '../../services/auth/auth.service';
 export class Login {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
+  private router = inject(Router);
   errorMessage = signal<string | null>(null);
 
   loginForm = this.formBuilder.group({
@@ -47,6 +48,7 @@ export class Login {
             return;
           }
           console.log('Login successful:', response.data?.user.email);
+          this.router.navigate(['/app/dashboard']);
         },
         error: (error) => {
           console.error('Unexpected error:', error);
