@@ -8,6 +8,13 @@
       "when": 1770245309194,
       "tag": "0000_far_madame_web",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1771243701032,
+      "tag": "0001_huge_psylocke",
+      "breakpoints": true
     }
   ]
 }

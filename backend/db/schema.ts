@@ -52,3 +52,23 @@ export const verification = sqliteTable('verification', {
   createdAt: integer('createdAt', { mode: 'timestamp' }),
   updatedAt: integer('updatedAt', { mode: 'timestamp' }),
 });
+
+export const organisation = sqliteTable('orgnaisation', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updatedAt', { mode: 'timestamp' }).notNull(),
+})
+
+export const userOrganisation = sqliteTable('user_organisation', {
+  id: text('id').primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  organisationId: text('organisationId')
+    .notNull()
+    .references(() => organisation.id, { onDelete: 'cascade' }),
+  admin: integer('admin',{mode: 'boolean'}).notNull().default(false),
+  createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updatedAt', { mode: 'timestamp' }).notNull(),
+});
