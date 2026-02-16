@@ -25,7 +25,7 @@ import { AuthService } from '../../services/auth/auth.service';
 export class Login {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  private router = inject(Router);
+  private readonly router = inject(Router);
   errorMessage = signal<string | null>(null);
 
   loginForm = this.formBuilder.group({

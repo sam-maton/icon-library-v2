@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { authClient } from '../../lib/auth-client';
 
-type SignInUser = {
+type AuthUser = {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -17,15 +17,21 @@ type SignInData = {
   redirect: boolean;
   token: string;
   url?: string;
-  user: SignInUser;
+  user: AuthUser;
 };
 
-type SignInError = {
+type SignUpData = {
+  token: string | null;
+  user: AuthUser;
+};
+
+type AuthError = {
   code?: string;
   message?: string;
 };
 
-type SignInResult = { data: SignInData | null; error: SignInError | null };
+type SignInResult = { data: SignInData | null; error: AuthError | null };
+type SignUpResult = { data: SignUpData | null; error: AuthError | null };
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +46,7 @@ export class AuthService {
     );
   }
 
-  signUp(name: string, email: string, password: string): Observable<unknown> {
+  signUp(name: string, email: string, password: string): Observable<SignUpResult> {
     return from(authClient.signUp.email({ email, name, password })).pipe(
       tap(() => this.refreshSession()),
     );

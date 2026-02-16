@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,13 +7,13 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -30,20 +30,20 @@ import { RouterModule } from '@angular/router';
   styleUrl: './signup.scss',
 })
 export class Signup {
-  signupForm: FormGroup;
   private readonly fb = inject(FormBuilder);
-  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  errorMessage = signal<string | null>(null);
 
-  constructor() {
-    this.signupForm = this.fb.group(
-      {
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', [Validators.required]],
-      },
-      { validators: this.passwordMatchValidator },
-    );
-  }
+  signupForm: FormGroup = this.fb.group(
+    {
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validators: this.passwordMatchValidator },
+  );
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
@@ -59,12 +59,22 @@ export class Signup {
   onSubmit() {
     if (this.signupForm.valid) {
       const formData = this.signupForm.value;
-      this.http.post('http://localhost:3000/api/signup', formData).subscribe({
+      this.authService.signUp(formData.name, formData.email, formData.password).subscribe({
         next: (response) => {
-          console.log('Signup successful:', response);
+          if (response.error) {
+            console.log(response.error);
+            if (response.error.message) {
+              this.errorMessage.set(response.error.message);
+            } else {
+              this.errorMessage.set('An unknown error occurred during login.');
+            }
+            return;
+          }
+          console.log('Login successful:', response);
+          // this.router.navigate(['/app/dashboard']);
         },
         error: (error) => {
-          console.error('Signup error:', error);
+          console.error('Unexpected error: ', error);
         },
       });
     }
