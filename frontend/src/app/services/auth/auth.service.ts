@@ -1,16 +1,32 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Injectable, signal, computed } from '@angular/core';
+import { from, Observable } from 'rxjs';
+import { tap, switchMap, map } from 'rxjs/operators';
 import { authClient } from '../../lib/auth-client';
 
 type AuthUser = {
-  id: string;
   createdAt: Date;
-  updatedAt: Date;
   email: string;
   emailVerified: boolean;
-  name: string;
+  id: string;
   image?: string | null;
+  name: string;
+  updatedAt: Date;
+};
+
+type AuthError = {
+  code?: string;
+  message?: string;
+};
+
+type AuthSession = {
+  createdAt: Date;
+  expiresAt: Date;
+  id: string;
+  ipAddress?: string | null;
+  token: string;
+  updatedAt: Date;
+  userAgent?: string | null;
+  userId: string;
 };
 
 type SignInData = {
@@ -25,42 +41,45 @@ type SignUpData = {
   user: AuthUser;
 };
 
-type AuthError = {
-  code?: string;
-  message?: string;
+type SessionData = {
+  session: AuthSession | null;
+  user: AuthUser | null;
 };
 
-type SignInResult = { data: SignInData | null; error: AuthError | null };
-type SignUpResult = { data: SignUpData | null; error: AuthError | null };
+type SignInResponse = { data: SignInData | null; error: AuthError | null };
+type SignUpResponse = { data: SignUpData | null; error: AuthError | null };
+type SessionResponse = { data: SessionData | null; error: AuthError | null };
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly sessionSubject = new BehaviorSubject<unknown>(null);
-  readonly session$ = this.sessionSubject.asObservable();
+  private readonly sessionSig = signal<SessionResponse | null>(null);
 
-  signIn(email: string, password: string): Observable<SignInResult> {
-    return from(authClient.signIn.email({ email, password })).pipe(
-      tap(() => this.refreshSession()),
-    );
+  readonly session = computed(() => this.sessionSig());
+  readonly user = computed(() => this.sessionSig()?.data?.user ?? null);
+  readonly isAuthenticated = computed(() => !!this.user());
+
+  signIn(email: string, password: string): Observable<SignInResponse> {
+    return from(authClient.signIn.email({ email, password }));
   }
 
-  signUp(name: string, email: string, password: string): Observable<SignUpResult> {
+  signUp(name: string, email: string, password: string): Observable<SignUpResponse> {
     return from(authClient.signUp.email({ email, name, password })).pipe(
-      tap(() => this.refreshSession()),
+      switchMap((result) => this.getSession().pipe(map(() => result))),
     );
   }
 
   signOut(): Observable<unknown> {
-    return from(authClient.signOut()).pipe(tap(() => this.sessionSubject.next(null)));
+    return from(authClient.signOut()).pipe(tap(() => this.sessionSig.set(null)));
   }
 
-  getSession(): Observable<unknown> {
-    return from(authClient.getSession()).pipe(tap((session) => this.sessionSubject.next(session)));
-  }
+  getSession(): Observable<SessionResponse> {
+    // return from(authClient.getSession()).pipe(
+    //   map(({ data, error }) => (error ? null : (data ?? null))),
+    //   tap((session) => this.sessionSig.set(session)),
+    // );
 
-  private refreshSession(): void {
-    this.getSession().subscribe();
+    return from(authClient.getSession());
   }
 }

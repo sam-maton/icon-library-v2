@@ -15,6 +15,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false,
   },
   baseURL: process.env.BETTER_AUTH_BASE_URL || 'http://localhost:4200',
   // For development, we'll use a simple secret key
