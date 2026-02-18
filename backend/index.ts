@@ -2,9 +2,9 @@ import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 import { auth } from './auth.js';
+import { organisations } from './src/routes/organisations.js';
 
 const app = new Hono();
-const BASE_URL = process.env.BETTER_AUTH_BASE_URL || 'http://localhost:3000';
 
 app.use('/*', cors({
   origin: 'http://localhost:4200',
@@ -14,6 +14,8 @@ app.use('/*', cors({
 app.on(['GET', 'POST'], '/api/auth/*', (c) => {
   return auth.handler(c.req.raw);
 });
+
+app.route('/api/organisations',organisations);
 
 // Health check endpoint
 app.get('/health', (c) => {
