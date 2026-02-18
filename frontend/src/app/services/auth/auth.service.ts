@@ -60,15 +60,6 @@ export class AuthService {
   readonly user = computed(() => this.sessionSig()?.data?.user ?? null);
   readonly isAuthenticated = computed(() => !!this.user());
 
-  constructor() {
-    this.getSession().subscribe({
-      error: (error) => {
-        console.error('Unexpected error while fetching initial session:', error);
-        this.sessionSig.set(null);
-      },
-    });
-  }
-
   signIn(email: string, password: string): Observable<SignInResponse> {
     return from(authClient.signIn.email({ email, password })).pipe(
       switchMap((result) => this.getSession().pipe(map(() => result))),

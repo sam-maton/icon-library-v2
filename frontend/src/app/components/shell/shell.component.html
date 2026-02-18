@@ -2,11 +2,10 @@
   <mat-toolbar class="shell__toolbar" color="primary">
     <span class="shell__title">Icon Library</span>
     <span class="shell__spacer"></span>
-    @if (authService.user()?.name) {
-      <button mat-button type="button" (click)="onLogout()">
-        Logout {{ authService.user()?.name }}
-      </button>
-    }
+
+    <button mat-button type="button" (click)="onLogout()">
+      Logout {{ authService.user()?.name }}
+    </button>
   </mat-toolbar>
 
   <main class="shell__main">

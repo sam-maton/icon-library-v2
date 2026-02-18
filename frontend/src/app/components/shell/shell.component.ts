@@ -14,10 +14,6 @@ export class ShellComponent {
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  constructor() {
-    console.log(this.authService.user());
-  }
-
   onLogout(): void {
     this.authService.signOut().subscribe({
       next: () => {
