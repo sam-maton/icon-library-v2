@@ -60,14 +60,23 @@ export class AuthService {
   readonly user = computed(() => this.sessionSig()?.data?.user ?? null);
   readonly isAuthenticated = computed(() => !!this.user());
 
+  constructor() {
+    this.getSession().subscribe({
+      error: (error) => {
+        console.error('Unexpected error while fetching initial session:', error);
+        this.sessionSig.set(null);
+      },
+    });
+  }
+
   signIn(email: string, password: string): Observable<SignInResponse> {
-    return from(authClient.signIn.email({ email, password }));
+    return from(authClient.signIn.email({ email, password })).pipe(
+      switchMap((result) => this.getSession().pipe(map(() => result))),
+    );
   }
 
   signUp(name: string, email: string, password: string): Observable<SignUpResponse> {
-    return from(authClient.signUp.email({ email, name, password })).pipe(
-      switchMap((result) => this.getSession().pipe(map(() => result))),
-    );
+    return from(authClient.signUp.email({ email, name, password }));
   }
 
   signOut(): Observable<unknown> {
@@ -75,11 +84,6 @@ export class AuthService {
   }
 
   getSession(): Observable<SessionResponse> {
-    // return from(authClient.getSession()).pipe(
-    //   map(({ data, error }) => (error ? null : (data ?? null))),
-    //   tap((session) => this.sessionSig.set(session)),
-    // );
-
-    return from(authClient.getSession());
+    return from(authClient.getSession()).pipe(tap((res) => this.sessionSig.set(res)));
   }
 }

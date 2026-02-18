@@ -62,7 +62,6 @@ export class Signup {
       this.authService.signUp(formData.name, formData.email, formData.password).subscribe({
         next: (response) => {
           if (response.error) {
-            console.log(response.error);
             if (response.error.message) {
               this.errorMessage.set(response.error.message);
             } else {
@@ -70,8 +69,7 @@ export class Signup {
             }
             return;
           }
-          console.log('Login successful:', response);
-          // this.router.navigate(['/app/dashboard']);
+          this.router.navigate(['/login']);
         },
         error: (error) => {
           console.error('Unexpected error: ', error);

@@ -38,7 +38,6 @@ export class Login {
       const formData = this.loginForm.value;
       this.authService.signIn(formData.email!, formData.password!).subscribe({
         next: (response) => {
-          console.log(response);
           if (response.error) {
             console.log(response.error);
             if (response.error.message) {
@@ -48,22 +47,12 @@ export class Login {
             }
             return;
           }
-          console.log('Login successful:', response.data?.user.email);
-          // this.router.navigate(['/app/dashboard']);
+          this.router.navigate(['/app/dashboard']);
         },
         error: (error) => {
           console.error('Unexpected error:', error);
         },
       });
     }
-
-    this.authService.getSession().subscribe({
-      next: (response) => {
-        console.log('Session response:', response);
-      },
-      error: (error) => {
-        console.error('Unexpected error while checking session:', error);
-      },
-    });
   }
 }

@@ -11,8 +11,12 @@ import { AuthService } from '../../services/auth/auth.service';
   styleUrl: './shell.component.scss',
 })
 export class ShellComponent {
-  private readonly authService = inject(AuthService);
+  readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
+  constructor() {
+    console.log(this.authService.user());
+  }
 
   onLogout(): void {
     this.authService.signOut().subscribe({
