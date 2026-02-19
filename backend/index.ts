@@ -3,6 +3,7 @@ import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 import { auth } from './auth.js';
 import { organisations } from './src/routes/organisations.js';
+import { users } from './src/routes/users.js';
 
 const app = new Hono();
 
@@ -16,6 +17,7 @@ app.on(['GET', 'POST'], '/api/auth/*', (c) => {
 });
 
 app.route('/api/organisations',organisations);
+app.route('/api/users', users);
 
 // Health check endpoint
 app.get('/health', (c) => {
