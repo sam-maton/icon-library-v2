@@ -1,4 +1,4 @@
-CREATE TABLE `orgnaisation` (
+CREATE TABLE `organisation` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`createdAt` integer NOT NULL,
@@ -13,5 +13,5 @@ CREATE TABLE `user_organisation` (
 	`createdAt` integer NOT NULL,
 	`updatedAt` integer NOT NULL,
 	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`organisationId`) REFERENCES `orgnaisation`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`organisationId`) REFERENCES `organisation`(`id`) ON UPDATE no action ON DELETE cascade
 );

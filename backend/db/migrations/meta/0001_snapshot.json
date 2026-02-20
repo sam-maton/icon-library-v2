@@ -119,8 +119,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "orgnaisation": {
-      "name": "orgnaisation",
+    "organisation": {
+      "name": "organisation",
       "columns": {
         "id": {
           "name": "id",
@@ -368,10 +368,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "user_organisation_organisationId_orgnaisation_id_fk": {
-          "name": "user_organisation_organisationId_orgnaisation_id_fk",
+        "user_organisation_organisationId_organisation_id_fk": {
+          "name": "user_organisation_organisationId_organisation_id_fk",
           "tableFrom": "user_organisation",
-          "tableTo": "orgnaisation",
+          "tableTo": "organisation",
           "columnsFrom": [
             "organisationId"
           ],
