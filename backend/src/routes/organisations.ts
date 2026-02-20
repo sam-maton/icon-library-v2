@@ -13,27 +13,35 @@ organisations.post('/', async (c) => {
     return c.json({ error: 'userId and name are required' }, 400);
   }
 
+  // Validate name length
+  if (name.length < 3) {
+    return c.json({ error: 'Organisation name must be at least 3 characters' }, 400);
+  }
+
   const orgId = crypto.randomUUID();
   const userOrgId = crypto.randomUUID();
   const now = new Date();
 
   try {
-    // Create the organisation
-    await db.insert(organisation).values({
-      id: orgId,
-      name,
-      createdAt: now,
-      updatedAt: now,
-    });
+    // Execute both inserts in a transaction
+    await db.transaction(async (tx) => {
+      // Create the organisation
+      await tx.insert(organisation).values({
+        id: orgId,
+        name,
+        createdAt: now,
+        updatedAt: now,
+      });
 
-    // Add user as admin of the organisation
-    await db.insert(userOrganisation).values({
-      id: userOrgId,
-      userId,
-      organisationId: orgId,
-      admin: true,
-      createdAt: now,
-      updatedAt: now,
+      // Add user as admin of the organisation
+      await tx.insert(userOrganisation).values({
+        id: userOrgId,
+        userId,
+        organisationId: orgId,
+        admin: true,
+        createdAt: now,
+        updatedAt: now,
+      });
     });
 
     return c.json({

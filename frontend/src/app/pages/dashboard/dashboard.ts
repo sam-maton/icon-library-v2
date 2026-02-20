@@ -30,7 +30,7 @@ export class Dashboard implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly organisationService = inject(OrganisationService);
   private readonly dialog = inject(MatDialog);
-  private subscription?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   readonly organisations = signal<Organisation[]>([]);
   readonly loading = signal(true);
@@ -47,12 +47,12 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   private loadOrganisations(userId: string): void {
     this.loading.set(true);
-    this.subscription = this.organisationService.getUserOrganisations(userId).subscribe({
+    const sub = this.organisationService.getUserOrganisations(userId).subscribe({
       next: (orgs) => {
         this.organisations.set(orgs);
         this.loading.set(false);
@@ -63,6 +63,7 @@ export class Dashboard implements OnInit, OnDestroy {
         this.loading.set(false);
       },
     });
+    this.subscriptions.push(sub);
   }
 
   onCreateOrganisation(): void {
@@ -70,23 +71,27 @@ export class Dashboard implements OnInit, OnDestroy {
       width: '400px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    const sub = dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const user = this.authService.user();
         if (user?.id) {
           this.loading.set(true);
-          this.organisationService.createOrganisation(user.id, result.name).subscribe({
-            next: () => {
-              this.loadOrganisations(user.id);
-            },
-            error: (err) => {
-              console.error('Error creating organisation:', err);
-              this.error.set('Failed to create organisation');
-              this.loading.set(false);
-            },
-          });
+          const createSub = this.organisationService
+            .createOrganisation(user.id, result.name)
+            .subscribe({
+              next: () => {
+                this.loadOrganisations(user.id);
+              },
+              error: (err) => {
+                console.error('Error creating organisation:', err);
+                this.error.set('Failed to create organisation');
+                this.loading.set(false);
+              },
+            });
+          this.subscriptions.push(createSub);
         }
       }
     });
+    this.subscriptions.push(sub);
   }
 }
