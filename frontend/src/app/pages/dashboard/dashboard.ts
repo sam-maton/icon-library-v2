@@ -52,6 +52,11 @@ export class Dashboard implements OnInit, OnDestroy {
 
   private loadOrganisations(userId: string): void {
     this.loading.set(true);
+    // Unsubscribe from any existing subscription before creating a new one
+    if (this.subscriptions.length > 0) {
+      this.subscriptions.forEach((sub) => sub.unsubscribe());
+      this.subscriptions = [];
+    }
     const sub = this.organisationService.getUserOrganisations(userId).subscribe({
       next: (orgs) => {
         this.organisations.set(orgs);

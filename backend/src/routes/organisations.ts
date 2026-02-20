@@ -9,6 +9,9 @@ organisations.post('/', async (c) => {
   const body = await c.req.json();
   const { userId, name } = body;
 
+  // TODO: Add authentication middleware to verify userId matches the authenticated user
+  // Currently accepting userId from request body is a security risk
+  
   if (!userId || !name) {
     return c.json({ error: 'userId and name are required' }, 400);
   }
