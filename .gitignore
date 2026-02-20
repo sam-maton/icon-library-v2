@@ -12,6 +12,7 @@ backend/dist/
 backend/db/app.db
 backend/db/app.db-shm
 backend/db/app.db-wal
+backend/db/local.db
 
 # Environment files
 .env

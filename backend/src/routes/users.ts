@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 export const users = new Hono();
 
 users.get('/:id/organisations', async (c) => {
-  const userId = c.req.param('userId');
+  const userId = c.req.param('id');
 
   if (!userId) {
     return c.json({ error: 'userId is required' }, 400);

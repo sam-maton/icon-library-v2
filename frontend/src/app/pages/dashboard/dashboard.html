@@ -1,1 +1,40 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+  <h1 class="dashboard__title">My Organisations</h1>
+
+  @if (loading()) {
+  <div class="dashboard__loading">
+    <mat-spinner></mat-spinner>
+    <p>Loading organisations...</p>
+  </div>
+  } @else if (error()) {
+  <div class="dashboard__error">
+    <p>{{ error() }}</p>
+  </div>
+  } @else if (organisations().length === 0) {
+  <div class="dashboard__empty">
+    <p>You don't belong to any organisations yet.</p>
+    <button mat-raised-button color="primary" (click)="onCreateOrganisation()">
+      Create Organisation
+    </button>
+  </div>
+  } @else {
+  <div class="dashboard__organisations">
+    @for (org of organisations(); track org.id) {
+    <mat-card class="organisation-card">
+      <mat-card-header>
+        <mat-card-title>{{ org.name }}</mat-card-title>
+        @if (org.admin) {
+        <mat-card-subtitle>Admin</mat-card-subtitle>
+        }
+      </mat-card-header>
+      <mat-card-content>
+        <p>Created: {{ org.createdAt | date: 'medium' }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">View</button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+  }
+</div>
