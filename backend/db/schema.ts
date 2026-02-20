@@ -53,7 +53,7 @@ export const verification = sqliteTable('verification', {
   updatedAt: integer('updatedAt', { mode: 'timestamp' }),
 });
 
-export const organisation = sqliteTable('orgnaisation', {
+export const organisation = sqliteTable('organisation', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
