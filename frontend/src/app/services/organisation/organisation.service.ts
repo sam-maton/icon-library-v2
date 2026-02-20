@@ -28,4 +28,11 @@ export class OrganisationService {
       .get<OrganisationsResponse>(`${this.apiUrl}/users/${userId}/organisations`)
       .pipe(map((response) => response.organisations));
   }
+
+  createOrganisation(userId: string, name: string): Observable<Organisation> {
+    return this.http.post<Organisation>(`${this.apiUrl}/organisations`, {
+      userId,
+      name,
+    });
+  }
 }
